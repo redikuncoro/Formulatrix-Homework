@@ -41,6 +41,7 @@ class Program
 
             if (x % 3 == 0) result += "foo";
             if (x % 5 == 0) result += "bar";
+            if (x % 7 == 0) result += "jazz";
 
             if (string.IsNullOrEmpty(result))
             {
