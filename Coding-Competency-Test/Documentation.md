@@ -41,6 +41,56 @@ class Program
 
             if (x % 3 == 0) result += "foo";
             if (x % 5 == 0) result += "bar";
+
+            if (string.IsNullOrEmpty(result))
+            {
+                results.Add(x.ToString());
+            }
+            else
+            {
+                results.Add(result);
+            }
+        }
+
+        Console.WriteLine(string.Join(", ", results));
+    }
+}
+```
+
+## 2. Foo Bar Jazz
+
+### Question
+Continuing on the previous question. Add the following rules :
+* print "jazz", if x is divisible by 7
+
+This means for x=21, x=35 and x=105 the program should print "foojazz", "barjazz" and "foobarjazz" respectively.
+
+### Answer
+Add new rule (jazz) to the validation section  
+`if (x % 7 == 0) result += "jazz";`
+
+```csharp
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Input N :");
+        string input = Console.ReadLine();
+        int number;
+        if (!int.TryParse(input, out number))
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer.");
+            return;
+        }
+        
+        List<string> results = new List<string>();
+
+        for (int x = 1; x <= number; x++)
+        {
+            string result = "";
+
+            if (x % 3 == 0) result += "foo";
+            if (x % 5 == 0) result += "bar";
             if (x % 7 == 0) result += "jazz";
 
             if (string.IsNullOrEmpty(result))
