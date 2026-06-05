@@ -18,8 +18,10 @@
             string result = "";
 
             if (x % 3 == 0) result += "foo";
+            if (x % 4 == 0) result += "baz";
             if (x % 5 == 0) result += "bar";
             if (x % 7 == 0) result += "jazz";
+            if (x % 9 == 0) result += "huzz";
 
             if (string.IsNullOrEmpty(result))
             {
