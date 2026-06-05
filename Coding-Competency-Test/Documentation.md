@@ -170,3 +170,126 @@ class Program
     }
 }
 ```
+
+## 4. Dynamic Foo Bar
+
+### Question
+
+Turn the generator logic in the code you have so far into a class object and make it so that the client code can configure its own rules i.e. add the following API
+> myClass.AddRule( int input, string output )
+
+### Answer
+
+Create new Class GeneratorLogic.cs that handle :
+* CRUD rules (AddRule -> add or update, RemoveRule, CleanRules, GetRule)
+* Perform the logic as we have before in previous question (Generate + Print)
+
+so the new class GeneratorLogic.cs will be :
+
+```csharp
+class GeneratorLogic
+{
+    private readonly SortedDictionary<int, string> _rules = new SortedDictionary<int, string>();
+
+    public void AddRule(int divisor, string output)
+    {
+        if (divisor <= 0)
+        {
+            throw new ArgumentException("Divisor must be a positive integer.");
+        }
+        if (string.IsNullOrEmpty(output))
+        {
+            throw new ArgumentException("Output cannot be null or empty.");
+        }
+        _rules[divisor] = output;
+    }
+
+    public SortedDictionary<int, string> GetRules()
+    {
+        return _rules;
+    }
+
+    public void RemoveRule(int divisor)
+    {
+        if (!_rules.ContainsKey(divisor))
+        {
+            throw new KeyNotFoundException("Divisor not found in rules.");
+        }
+        _rules.Remove(divisor);
+    }
+
+    public void ClearRules()
+    {
+        _rules.Clear();
+    }
+
+    public List<string> Generate(int number)
+    {
+        if (number <= 0)
+        {
+            throw new ArgumentException("Number must be a positive integer.");
+        }
+
+        List<string> results = new List<string>();
+
+        for (int x = 1; x <= number; x++)
+        {
+            string result = "";
+
+            foreach (var rule in _rules)
+            {
+                if (x % rule.Key == 0)
+                {
+                    result += rule.Value;
+                }
+            }
+
+            if (string.IsNullOrEmpty(result))
+            {
+                results.Add(x.ToString());
+            }
+            else
+            {
+                results.Add(result);
+            }
+        }
+
+        return results;
+    }
+
+    public void PrintResults(List<string> results)
+    {
+        Console.WriteLine(string.Join(", ", results));
+    }
+}
+```
+
+and by this, client can configure its own rules. this is the example :
+
+```csharp
+class Program
+{
+    static void Main(string[] args)
+    {
+        GeneratorLogic generator = new GeneratorLogic();
+        generator.AddRule(3, "foo");
+        generator.AddRule(4, "baz");
+        Console.WriteLine("Generated Rules:");
+        foreach (var rule in generator.GetRules())
+        {
+            Console.WriteLine($"Divisor: {rule.Key}, Output: {rule.Value}");
+        }
+        Console.WriteLine("Input N :");
+        string input = Console.ReadLine();
+        int number;
+        if (!int.TryParse(input, out number))
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer.");
+            return;
+        }
+
+        List<string> results = generator.Generate(number);
+        generator.PrintResults(results);
+    }
+}
+```
